@@ -51,7 +51,7 @@ server:
 
 fleettrack:
   jwt:
-    secret: ${JWT_SECRET:random_jwt_secret_characters_12345678_12345678}
+    secret: ${JWT_SECRET:my-super-secure-jwt-secret-key-for-fleettrack-2026}
     access-token-expiration-ms: 900000        # 15 min
     refresh-token-expiration-ms: 604800000    # 7 days
   cors:

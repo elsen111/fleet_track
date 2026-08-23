@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    url: jdbc:tc:postgresql:16-alpine:///fleettrack_test
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: true
+  data:
+    redis:
+      host: localhost
+      port: 6370
+
+fleettrack:
+  jwt:
+    secret: ${JWT_SECRET}
+    access-token-expiration-ms: 900000
+    refresh-token-expiration-ms: 604800000
+  rate-limit:
+    capacity: 1000
+    refill-tokens: 1000
+    refill-duration-seconds: 60
