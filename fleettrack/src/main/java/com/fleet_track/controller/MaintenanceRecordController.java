@@ -6,6 +6,7 @@ import com.fleet_track.dto.response.MaintenanceRecordResponse;
 import com.fleet_track.dto.response.PagedResponse;
 import com.fleet_track.service.MaintenanceRecordService;
 import com.fleet_track.util.PageableUtils;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,13 +19,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/maintenance-records")
+@RequestMapping("/api/maintenance-records")
 @RequiredArgsConstructor
 @Tag(name = "Maintenance", description = "Vehicle maintenance and service history")
 public class MaintenanceRecordController {
 
     private final MaintenanceRecordService maintenanceRecordService;
 
+    @Operation(summary = "Log a maintenance record", description = "Creates a new maintenance/service record for a vehicle and flags it as in maintenance if currently active.")
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN','FLEET_MANAGER')")
     public ResponseEntity<ApiResponse<MaintenanceRecordResponse>> create(
@@ -33,6 +35,7 @@ public class MaintenanceRecordController {
                 .body(ApiResponse.success("Maintenance record created", maintenanceRecordService.create(request)));
     }
 
+    @Operation(summary = "Get maintenance history for a vehicle", description = "Returns a paginated list of maintenance records for the specified vehicle.")
     @GetMapping("/vehicle/{vehicleId}")
     public ResponseEntity<ApiResponse<PagedResponse<MaintenanceRecordResponse>>> getByVehicle(
             @PathVariable UUID vehicleId,
@@ -46,6 +49,7 @@ public class MaintenanceRecordController {
                 maintenanceRecordService.getByVehicle(vehicleId, pageable)));
     }
 
+    @Operation(summary = "Delete a maintenance record", description = "Permanently removes a maintenance record. Requires ADMIN or FLEET_MANAGER role.")
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','FLEET_MANAGER')")
     public ResponseEntity<ApiResponse<Void>> delete(@PathVariable UUID id) {

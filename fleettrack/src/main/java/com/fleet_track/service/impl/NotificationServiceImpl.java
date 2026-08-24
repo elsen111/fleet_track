@@ -17,8 +17,11 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public void publish(NotificationMessage message) {
+        log.info("Publishing notification type={} for vehicle {}", message.type(), message.vehicleId());
+
         try {
             redisTemplate.convertAndSend(RedisConfig.NOTIFICATIONS_CHANNEL, message);
+            log.debug("Notification published successfully to channel {}", RedisConfig.NOTIFICATIONS_CHANNEL);
         } catch (Exception e) {
             log.warn("Failed to publish notification for vehicle {}: {}", message.vehicleId(), e.getMessage());
         }

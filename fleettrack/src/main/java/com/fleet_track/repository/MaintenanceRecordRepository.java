@@ -16,4 +16,6 @@ public interface MaintenanceRecordRepository extends JpaRepository<MaintenanceRe
     List<MaintenanceRecordEntity> findByNextDueDateBetween(LocalDate start, LocalDate end);
 
     List<MaintenanceRecordEntity> findByNextDueDateBefore(LocalDate date);
+
+    List<MaintenanceRecordEntity> findByVehicleIdOrderByServiceDateDesc(UUID vehicleId);
 }

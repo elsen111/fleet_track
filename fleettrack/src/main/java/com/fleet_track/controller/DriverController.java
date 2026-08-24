@@ -7,6 +7,7 @@ import com.fleet_track.dto.response.DriverResponse;
 import com.fleet_track.dto.response.PagedResponse;
 import com.fleet_track.service.DriverService;
 import com.fleet_track.util.PageableUtils;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/drivers")
+@RequestMapping("/api/drivers")
 @RequiredArgsConstructor
 @Tag(name = "Drivers", description = "Driver profile administration")
 public class DriverController {
@@ -28,17 +29,20 @@ public class DriverController {
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN','FLEET_MANAGER')")
+    @Operation(summary = "Driver creation", description = "Creates a new driver")
     public ResponseEntity<ApiResponse<DriverResponse>> create(@Valid @RequestBody DriverCreateRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.success("Driver created", driverService.create(request)));
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Get the driver", description = "Gets a driver by id")
     public ResponseEntity<ApiResponse<DriverResponse>> getById(@PathVariable UUID id) {
         return ResponseEntity.ok(ApiResponse.success(driverService.getById(id)));
     }
 
     @GetMapping
+    @Operation(summary = "Get all drivers", description = "Gets all registered drivers and returns paginated response with filters")
     public ResponseEntity<ApiResponse<PagedResponse<DriverResponse>>> search(
             @RequestParam(required = false) Boolean active,
             @RequestParam(required = false) String search,
@@ -52,12 +56,14 @@ public class DriverController {
     }
 
     @PatchMapping("/{id}")
+    @Operation(summary = "Driver update", description = "Updates the existing driver profile")
     public ResponseEntity<ApiResponse<DriverResponse>> update(@PathVariable UUID id,
                                                               @Valid @RequestBody DriverUpdateRequest request) {
         return ResponseEntity.ok(ApiResponse.success("Driver updated", driverService.update(id, request)));
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Driver deletion", description = "Deletes the existing driver")
     public ResponseEntity<ApiResponse<Void>> delete(@PathVariable UUID id) {
         driverService.delete(id);
         return ResponseEntity.ok(ApiResponse.message("Driver deleted"));

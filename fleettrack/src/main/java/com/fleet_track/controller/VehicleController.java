@@ -8,6 +8,7 @@ import com.fleet_track.dto.response.VehicleResponse;
 import com.fleet_track.enums.VehicleStatus;
 import com.fleet_track.service.VehicleService;
 import com.fleet_track.util.PageableUtils;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,13 +21,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/vehicles")
+@RequestMapping("/api/vehicles")
 @RequiredArgsConstructor
 @Tag(name = "Vehicles", description = "Vehicle registration and fleet management")
 public class VehicleController {
 
     private final VehicleService vehicleService;
 
+    @Operation(summary = "Create a new vehicle", description = "Registers a new vehicle in the fleet. Requires ADMIN or FLEET_MANAGER role.")
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'FLEET_MANAGER')")
     public ResponseEntity<ApiResponse<VehicleResponse>> create(@Valid @RequestBody VehicleCreateRequest request) {
@@ -34,11 +36,13 @@ public class VehicleController {
                 .body(ApiResponse.success("Vehicle created", vehicleService.create(request)));
     }
 
+    @Operation(summary = "Get vehicle by ID", description = "Retrieves a single vehicle's full details by its UUID.")
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<VehicleResponse>> getById(@PathVariable UUID id) {
         return ResponseEntity.ok(ApiResponse.success(vehicleService.getById(id)));
     }
 
+    @Operation(summary = "Search vehicles", description = "Returns a paginated, filterable, sortable list of vehicles by status, year, assigned driver, or free-text search.")
     @GetMapping
     public ResponseEntity<ApiResponse<PagedResponse<VehicleResponse>>> search(
             @RequestParam(required = false) VehicleStatus status,
@@ -55,12 +59,14 @@ public class VehicleController {
                 vehicleService.search(status, year, driverId, search, pageable)));
     }
 
+    @Operation(summary = "Update a vehicle", description = "Partially updates an existing vehicle's fields, including driver reassignment.")
     @PatchMapping("/{id}")
     public ResponseEntity<ApiResponse<VehicleResponse>> update(@PathVariable UUID id,
                                                                @Valid @RequestBody VehicleUpdateRequest request) {
         return ResponseEntity.ok(ApiResponse.success("Vehicle updated", vehicleService.update(id, request)));
     }
 
+    @Operation(summary = "Delete a vehicle", description = "Permanently removes a vehicle from the fleet. Requires ADMIN role.")
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> delete(@PathVariable UUID id) {
         vehicleService.delete(id);
