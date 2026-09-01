@@ -6,7 +6,6 @@
   <img src="https://img.shields.io/badge/PostgreSQL-16-blue?logo=postgresql&logoColor=white" alt="PostgreSQL"/>
   <img src="https://img.shields.io/badge/Redis-7-red?logo=redis&logoColor=white" alt="Redis"/>
   <img src="https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white" alt="Docker"/>
-  <img src="https://img.shields.io/badge/License-MIT-lightgrey" alt="License"/>
 </p>
 
 <p align="center">
